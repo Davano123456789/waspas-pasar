@@ -1,64 +1,84 @@
 @extends('layouts.master')
 
-@section('title', 'Manajemen Kriteria - WASPAS Pasar')
+@section('title', 'Data Kriteria - WASPAS Pasar')
 
 @section('content')
 <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="card-title">Manajemen Kriteria</h4>
-                    <a href="{{ route('kriteria.create') }}" class="btn btn-primary btn-icon-text">
-                        <i class="fas fa-plus mr-2"></i>
-                        Tambah Kriteria
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="card-title">Daftar Kriteria & Sub-Kriteria</h4>
+                        <p class="card-description text-muted">Kelola kriteria penilaian dan definisikan parameter sub-kriteria (Likert) di sini.</p>
+                    </div>
+                    <a href="{{ route('kriteria.create') }}" class="btn btn-primary font-weight-bold">
+                        <i class="fas fa-plus mr-2"></i> Tambah Kriteria
                     </a>
                 </div>
 
+                @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
+
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <thead>
+                        <thead class="bg-light">
                             <tr>
-                                <th>#</th>
+                                <th width="50">ID</th>
                                 <th>Nama Kriteria</th>
-                                <th>Bobot</th>
+                                <th>Bobot (W)</th>
                                 <th>Tipe</th>
-                                <th>Aksi</th>
+                                <th>Sub-Kriteria (Likert)</th>
+                                <th width="150" class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($kriterias as $kriteria)
+                            @foreach($kriterias as $k)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $kriteria->nama_kriteria }}</td>
-                                <td>{{ $kriteria->bobot }}</td>
+                                <td>C{{ $k->id_kriteria }}</td>
+                                <td class="font-weight-bold">{{ $k->nama_kriteria }}</td>
+                                <td>{{ $k->bobot }}</td>
                                 <td>
-                                    @if($kriteria->tipe_kriteria == 1)
-                                    <span class="badge badge-success">Benefit</span>
-                                    @else
-                                    <span class="badge badge-warning">Cost</span>
-                                    @endif
+                                    <span class="badge {{ $k->tipe_kriteria == 1 ? 'badge-info' : 'badge-dark' }}">
+                                        {{ $k->tipe_kriteria == 1 ? 'Benefit' : 'Cost' }}
+                                    </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('kriteria.edit', $kriteria->id_kriteria) }}" class="btn btn-warning btn-sm btn-icon-text">
+                                    <button class="btn btn-outline-secondary btn-xs" type="button" data-toggle="collapse" data-target="#sub{{ $k->id_kriteria }}">
+                                        <i class="fas fa-eye mr-1"></i> Lihat Sub
+                                    </button>
+                                    <div class="collapse mt-2" id="sub{{ $k->id_kriteria }}">
+                                        <div class="p-2 bg-light rounded border">
+                                            <ul class="list-unstyled mb-0 small">
+                                                @foreach($k->sub_kriteria as $sub)
+                                                <li>
+                                                  <strong class="text-primary">{{ $sub->nilai_likert }}:</strong> {{ $sub->nama_sub_kriteria }}
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('kriteria.edit', $k->id_kriteria) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
-                                        Edit
                                     </a>
-                                    <form action="{{ route('kriteria.destroy', $kriteria->id_kriteria) }}" method="POST" class="d-inline form-hapus">
+                                    <form action="{{ route('kriteria.destroy', $k->id_kriteria) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm btn-icon-text btn-hapus">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus kriteria ini?')">
                                             <i class="fas fa-trash"></i>
-                                            Hapus
                                         </button>
                                     </form>
                                 </td>
                             </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">Data kriteria belum tersedia. Silakan klik tombol "Tambah Kriteria".</td>
-                            </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -67,25 +87,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    $(document).on('click', '.btn-hapus', function() {
-        let form = $(this).closest('.form-hapus');
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data kriteria ini akan dihapus secara permanen!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#4B49AC',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-    });
-</script>
-@endpush

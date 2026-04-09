@@ -12,6 +12,11 @@ class Kriteria extends Model
     protected $table = 'kriteria';
     protected $primaryKey = 'id_kriteria';
 
+    public function sub_kriteria()
+    {
+        return $this->hasMany(SubKriteria::class, 'id_kriteria')->orderBy('nilai_likert', 'desc');
+    }
+
     protected $fillable = [
         'nama_kriteria',
         'bobot',

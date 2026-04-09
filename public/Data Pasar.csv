@@ -1,0 +1,36 @@
+Unnamed: 0,Unnamed: 1,Unnamed: 2,Unnamed: 3,Unnamed: 4,Unnamed: 5,Unnamed: 6,Unnamed: 7,Unnamed: 8,Unnamed: 9
+,,,,,,,,,
+No,Kode,Keterangan,Sub Kriteria,,Kode,Kriteria,Sub Kriteria,Variabel,Likert
+1,C1,Realisasi Retribusi,95% – 100%,,C1,Realisasi Retribusi,95% – 100%,Sangat Baik,5
+,,,85% – 94%,,,,85% – 94%,Baik,4
+,,,75% – 84%,,,,75% – 84%,Cukup Baik,3
+,,,60% – 74%,,,,60% – 74%,Tidak Baik,2
+,,,< 60%,,,,< 60%,Sangat Tidak Baik,1
+2,C2,Jumlah Pengunjung,≥ 1.000 orang per hari,,,,,,
+,,,751 – 999 orang per hari,,Kode,Kriteria,Sub Kriteria,Variabel,Likert
+,,,501 – 750 orang per hari,,C2,Jumlah Pengunjung,≥ 1.000 orang per hari,Sangat Baik,5
+,,,251 – 500 orang per hari,,,,751 – 999 orang per hari,Baik,4
+,,,≤ 250 orang per hari,,,,501 – 750 orang per hari,Cukup Baik,3
+3,C3,Kebersihan,"Sangat Baik (Pengelolaan sampah dan limbah sangat baik, tidak ada penumpukan)",,,,251 – 500 orang per hari,Tidak Baik,2
+,,,"Baik (Pengelolaan sampah cukup baik, terdapat sedikit penumpukan namun terkendali)",,,,≤ 250 orang per hari,Sangat Tidak Baik,1
+,,,"Cukup (Pengelolaan sampah kurang konsisten, terdapat beberapa area kotor)",,,,,,
+,,,Tidak Baik (Sampah sering menumpuk dan kebersihan kurang terjaga),,Kode,Kriteria,Sub Kriteria,Variabel,Likert
+,,,Sangat Tidak Baik (Lingkungan pasar kotor dan pengelolaan limbah tidak berjalan),,C3,Kebersihan,"Pengelolaan sampah dan limbah sangat baik, tidak ada penumpukan",Sangat Baik,5
+4,C4,Keamanan,Sangat Baik (Petugas keamanan tersedia dan kondisi pasar sangat aman serta tertib),,,,"Pengelolaan sampah cukup baik, terdapat sedikit penumpukan namun terkendali",Baik,4
+,,,Baik (Petugas keamanan tersedia dan kondisi pasar relatif aman serta terkendali),,,,"Pengelolaan sampah kurang konsisten, terdapat beberapa area kotor",Cukup Baik,3
+,,,Cukup (Petugas keamanan tersedia namun jumlahnya terbatas dan kondisi keamanan cukup terjaga),,,,Sampah sering menumpuk dan kebersihan kurang terjaga,Tidak Baik,2
+,,,Tidak Baik (Petugas keamanan kurang memadai dan kondisi keamanan kurang terjaga),,,,Lingkungan pasar kotor dan pengelolaan limbah tidak berjalan,Sangat Tidak Baik,1
+,,,Sangat Tidak Baik (Tidak terdapat pengamanan yang memadai dan kondisi pasar tidak aman),,,,,,
+5,C5,Kondisi Bangunan,Sangat Baik (Struktur bangunan sangat kokoh dan tata letak tertata rapi),,Kode,Kriteria,Sub Kriteria,Variabel,Likert
+,,,Baik (Struktur bangunan baik dan tata letak cukup teratur),,C4,Keamanan,Petugas keamanan tersedia dan kondisi pasar sangat aman serta tertib,Sangat Baik,5
+,,,Cukup (Struktur bangunan cukup layak namun tata letak kurang tertata),,,,Petugas keamanan tersedia dan kondisi pasar relatif aman serta terkendali,Baik,4
+,,,Tidak Baik (Struktur bangunan mulai rusak dan tata letak tidak teratur),,,,Petugas keamanan tersedia namun jumlahnya terbatas dan kondisi keamanan cukup terjaga,Cukup Baik,3
+,,,Sangat Tidak Baik (Bangunan tidak layak digunakan),,,,Petugas keamanan kurang memadai dan kondisi keamanan kurang terjaga,Tidak Baik,2
+,,,,,,,Tidak terdapat pengamanan yang memadai dan kondisi pasar tidak aman,Sangat Tidak Baik,1
+,,,,,,,,,
+Kode,Kriteria,Atribut ,Bobot,,Kode,Kriteria,Sub Kriteria,Variabel,Likert
+C1,Realisasi Retribusi,Benefit,0.5,,C5,Kondisi Bangunan,Struktur bangunan sangat kokoh dan tata letak tertata rapi,Sangat Baik,5
+C2,Jumlah Pengunjung,Benefit,0.15,,,,Struktur bangunan baik dan tata letak cukup teratur,Baik,4
+C3,Kebersihan,Benefit,0.1,,,,Struktur bangunan cukup layak namun tata letak kurang tertata,Cukup Baik,3
+C4,Keamanan,Benefit,0.1,,,,Struktur bangunan mulai rusak dan tata letak tidak teratur,Tidak Baik,2
+C5,Kondisi Bangunan,Benefit,0.15,,,,Bangunan tidak layak digunakan,Sangat Tidak Baik,1

@@ -3,84 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
+use App\Models\SubKriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KriteriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $kriterias = Kriteria::all();
+        $kriterias = Kriteria::with('sub_kriteria')->get();
         return view('kriteria.index', compact('kriterias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('kriteria.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nama_kriteria' => 'required|string|max:255',
             'bobot' => 'required|numeric',
             'tipe_kriteria' => 'required|numeric',
+            'subs' => 'required|array|size:5', // Harus ada 5 sub kriteria (1-5)
         ]);
 
-        Kriteria::create($request->all());
+        DB::transaction(function() use ($request) {
+            $kriteria = Kriteria::create([
+                'nama_kriteria' => $request->nama_kriteria,
+                'bobot' => $request->bobot,
+                'tipe_kriteria' => $request->tipe_kriteria,
+            ]);
 
-        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil ditambahkan!');
+            // Simpan Sub Kriteria (Nilai 5 sampai 1)
+            foreach ($request->subs as $nilai => $nama_sub) {
+                SubKriteria::create([
+                    'id_kriteria' => $kriteria->id_kriteria,
+                    'nama_sub_kriteria' => $nama_sub,
+                    'nilai_likert' => $nilai,
+                ]);
+            }
+        });
+
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria dan Sub-Kriteria berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Kriteria $kriteria)
-    {
-        return redirect()->route('kriteria.index');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        $kriteria = Kriteria::findOrFail($id);
-        return view('kriteria.edit', compact('kriteria'));
+        $kriteria = Kriteria::with('sub_kriteria')->findOrFail($id);
+        // Pastikan urutan sub kriteria teratur (5 ke 1)
+        $subs = $kriteria->sub_kriteria->pluck('nama_sub_kriteria', 'nilai_likert')->toArray();
+        return view('kriteria.edit', compact('kriteria', 'subs'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
             'nama_kriteria' => 'required|string|max:255',
             'bobot' => 'required|numeric',
             'tipe_kriteria' => 'required|numeric',
+            'subs' => 'required|array|size:5',
         ]);
 
-        $kriteria = Kriteria::findOrFail($id);
-        $kriteria->update($request->all());
+        DB::transaction(function() use ($request, $id) {
+            $kriteria = Kriteria::findOrFail($id);
+            $kriteria->update([
+                'nama_kriteria' => $request->nama_kriteria,
+                'bobot' => $request->bobot,
+                'tipe_kriteria' => $request->tipe_kriteria,
+            ]);
 
-        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diupdate!');
+            // Update atau Create Sub Kriteria
+            foreach ($request->subs as $nilai => $nama_sub) {
+                SubKriteria::updateOrCreate(
+                    ['id_kriteria' => $kriteria->id_kriteria, 'nilai_likert' => $nilai],
+                    ['nama_sub_kriteria' => $nama_sub]
+                );
+            }
+        });
+
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria dan Sub-Kriteria berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         Kriteria::destroy($id);
-
         return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil dihapus!');
     }
 }

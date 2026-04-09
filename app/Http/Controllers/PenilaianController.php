@@ -42,7 +42,7 @@ class PenilaianController extends Controller
         }
 
         $pasar = Pasar::findOrFail($id_pasar);
-        $kriterias = Kriteria::all();
+        $kriterias = Kriteria::with('sub_kriteria')->get();
         
         // Ambil nilai yang sudah ada jika ada
         $penilaians = Penilaian::where('id_pasar', $id_pasar)->pluck('nilai', 'id_kriteria')->toArray();

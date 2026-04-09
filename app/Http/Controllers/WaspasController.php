@@ -144,7 +144,41 @@ class WaspasController extends Controller
             return redirect()->route('waspas.index')->with('error', 'Riwayat tidak ditemukan.');
         }
 
-        return view('waspas.show', compact('hasil', 'batch_id'));
+        $kriterias = Kriteria::all();
+        $evaluatedPasars = Pasar::whereIn('id_pasar', $hasil->pluck('id_pasar'))->get();
+
+        // --- Rekonstruksi Matriks untuk Detail Tampilan ---
+        $matrix = [];
+        foreach ($evaluatedPasars as $pasar) {
+            foreach ($kriterias as $k) {
+                $nilai = Penilaian::where('id_pasar', $pasar->id_pasar)
+                                 ->where('id_kriteria', $k->id_kriteria)
+                                 ->first();
+                $matrix[$pasar->id_pasar][$k->id_kriteria] = $nilai ? $nilai->nilai : 0;
+            }
+        }
+
+        $maxValues = [];
+        $minValues = [];
+        foreach ($kriterias as $k) {
+            $columnValues = array_column($matrix, $k->id_kriteria);
+            $maxValues[$k->id_kriteria] = !empty($columnValues) ? max($columnValues) : 0;
+            $minValues[$k->id_kriteria] = !empty($columnValues) ? min($columnValues) : 0;
+        }
+
+        $normalizedMatrix = [];
+        foreach ($evaluatedPasars as $pasar) {
+            foreach ($kriterias as $k) {
+                $val = $matrix[$pasar->id_pasar][$k->id_kriteria];
+                if ($k->tipe_kriteria == 1) { // Benefit
+                    $normalizedMatrix[$pasar->id_pasar][$k->id_kriteria] = $maxValues[$k->id_kriteria] > 0 ? $val / $maxValues[$k->id_kriteria] : 0;
+                } else { // Cost
+                    $normalizedMatrix[$pasar->id_pasar][$k->id_kriteria] = $val > 0 ? $minValues[$k->id_kriteria] / $val : 0;
+                }
+            }
+        }
+
+        return view('waspas.show', compact('hasil', 'batch_id', 'kriterias', 'evaluatedPasars', 'matrix', 'normalizedMatrix'));
     }
 
     /**

@@ -1,0 +1,33 @@
+Unnamed: 0,Unnamed: 1,Unnamed: 2,Unnamed: 3,Unnamed: 4,Unnamed: 5,Unnamed: 6,Unnamed: 7,Unnamed: 8,Unnamed: 9
+,SISTEM PENDUKUNG KEPUTUSAN PEMBERIAN POTONGAN HARGA PELANGGAN,,,,,,,,
+,Metode EDAS,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+Alternatif ,C1,C2,C3,C4,C5,,Kode Kriteria,Atribut ,Bobot
+Simo,0.7,Cukup Baik,Cukup Baik,Tidak Baik,Tidak Baik,,C1,Benefit,0.5
+Pabean,0.7,Baik,Baik,Baik,Baik,,C2,Benefit,0.15
+Babaan,0.87,Cukup Baik,Cukup Baik,Cukup Baik,Cukup Baik,,C3,Benefit,0.1
+Pecindilan,0.4495,Cukup Baik,Tidak Baik,Cukup Baik,Tidak Baik,,C4,Benefit,0.1
+Pegirian,0.66,Cukup Baik,Cukup Baik,Cukup Baik,Cukup Baik,,C5,Benefit,0.15
+,,,,,,,,,
+Alternatif ,C1,C2,C3,C4,C5,,Kriteria,Atribut,Bobot
+A1,2,3,3,2,2,,C1,Benefit,0.5
+A2,2,4,4,4,4,,C2,Benefit,0.15
+A3,4,3,3,3,3,,C3,Benefit,0.1
+A4,1,3,2,3,2,,C4,Benefit,0.1
+A5,2,3,3,3,3,,C5,Benefit,0.15
+,,,,,,,,,
+Matriks Normalisasi,,,,,,,,,
+Alternatif ,C1,C2,C3,C4,C5,,,,
+A1,0.5,0.75,0.75,0.5,0.5,,,,
+A2,0.5,1,1,1,1,,,,
+A3,1,0.75,0.75,0.75,0.75,,,,
+A4,0.25,0.75,0.5,0.75,0.5,,,,
+A5,0.5,0.75,0.75,0.75,0.75,,,,
+,,,,,,,,,
+Alternatif ,Si,Pi,Qi,Ranking,,,,,
+A1,0.5625,0.5533409599,0.5579204799,4,,,,,
+A2,0.75,0.7071067812,0.7285533906,2,,,,,
+A3,0.875,0.8660254038,0.8705127019,1,,,,,
+A4,0.4375,0.391271145,0.4143855725,5,,,,,
+A5,0.625,0.6123724357,0.6186862178,3,,,,,
