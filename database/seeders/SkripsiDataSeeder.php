@@ -22,10 +22,19 @@ class SkripsiDataSeeder extends Seeder
         Penilaian::truncate();
         SubKriteria::truncate();
         Kriteria::truncate();
-        // Jangan hapus Admin (id=1), tapi hapus penguna lain
-        User::where('id_pengguna', '>', 1)->delete();
+        User::truncate(); // Hapus semua demi keamanan seeder baru
         Pasar::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // 1.5 Buat Akun Admin Utama
+        User::create([
+            'id_pengguna' => 1,
+            'username' => 'admin',
+            'password' => Hash::make('admin'),
+            'nama_lengkap' => 'Administrator Utama',
+            'peran' => 'Admin',
+            'id_pasar' => null,
+        ]);
 
         // 2. Insert Kriteria
         $kriterias = [
