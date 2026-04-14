@@ -36,7 +36,7 @@
         <button onclick="window.print()" style="padding: 10px 20px; background: #4B49AC; color: white; border: none; border-radius: 5px; cursor: pointer;">
             <i class="fas fa-print"></i> Cetak Sekarang
         </button>
-        <button onclick="window.history.back()" style="padding: 10px 20px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;">
+        <button onclick="window.close(); window.location.href='{{ route('waspas.show', $batch_id) }}';" style="padding: 10px 20px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;">
             Kembali
         </button>
     </div>
@@ -49,8 +49,8 @@
 
     <div class="content">
         <div class="meta-info">
-            <p><strong>Tanggal Perhitungan:</strong> {{ \Carbon\Carbon::parse($hasil->first()->created_at)->translatedFormat('d F Y (H:i)') }}</p>
-            <p><strong>Dicetak pada:</strong> {{ now()->translatedFormat('d F Y, H:i') }}</p>
+            <p><strong>Tanggal Perhitungan:</strong> {{ \Carbon\Carbon::parse($hasil->first()->created_at)->translatedFormat('d F Y') }}</p>
+            <p><strong>Dicetak pada:</strong> {{ now()->translatedFormat('d F Y') }}</p>
         </div>
 
         <!-- 1. Matriks Keputusan (X) -->
@@ -128,7 +128,7 @@
     <div class="footer">
         <div class="signature-wrapper">
             <p>Surabaya, {{ now()->translatedFormat('d F Y') }}</p>
-            <p><strong>Direktur</strong></p>
+            <p><strong>Direktur Utama</strong></p>
             <div class="signature-space"></div>
             <p>__________________________</p>
             <p>NIP. .............................</p>

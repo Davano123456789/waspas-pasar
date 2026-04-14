@@ -38,42 +38,60 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tipe Input Penilaian</label>
+                                <select name="tipe_input" id="tipe_input" class="form-control" required>
+                                    <option value="pilihan">Pilihan (Dropdown Skala 1-5)</option>
+                                    <option value="manual">Manual (Ketik Angka dengan Aturan Batas)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="satuan_container" style="display: none;">
+                            <div class="form-group">
+                                <label>Satuan (Opsional)</label>
+                                <input type="text" name="satuan" class="form-control" placeholder="Contoh: %, Orang per hari, Rp">
+                                <small class="text-muted">Ditampilkan di sebelah kanan kotak input saat penilaian.</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <hr>
                     <h5 class="mb-3 text-primary"><i class="fas fa-list-ol mr-2"></i> Definisi Sub-Kriteria (Likert)</h5>
                     <p class="text-muted small">Tentukan deskripsi untuk setiap tingkat nilai yang akan muncul saat pengisian penilaian.</p>
                     
                     <div class="row">
                         <div class="col-md-12">
+                            <!-- Helper Text for Manual -->
+                            <div id="manual_helper" style="display: none;" class="alert alert-info py-2">
+                                <i class="fas fa-info-circle mr-2"></i> Isi rentang nilai angka untuk setiap skor. Jika angka yang diisi masuk dalam rentang Min - Max, skor ini akan otomatis terpilih.
+                            </div>
+
+                            @php
+                                $skors = [
+                                    5 => ['label' => 'Nilai 5 (Sangat Baik)', 'class' => 'font-weight-bold text-success'],
+                                    4 => ['label' => 'Nilai 4 (Baik)', 'class' => ''],
+                                    3 => ['label' => 'Nilai 3 (Cukup)', 'class' => 'text-warning'],
+                                    2 => ['label' => 'Nilai 2 (Kurang)', 'class' => ''],
+                                    1 => ['label' => 'Nilai 1 (Buruk)', 'class' => 'text-danger'],
+                                ];
+                            @endphp
+
+                            @foreach($skors as $nilai => $cfg)
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bold text-success">Nilai 5 (Sangat Baik)</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="subs[5]" class="form-control" placeholder="Deskripsi untuk skor tertinggi (misal: 95% - 100%)" required>
+                                <label class="col-sm-3 col-form-label {{ $cfg['class'] }}">{{ $cfg['label'] }}</label>
+                                <div class="col-sm-5 name-col">
+                                    <input type="text" name="subs[{{ $nilai }}]" class="form-control" placeholder="Deskripsi untuk skor {{ $nilai }}" required>
+                                </div>
+                                <div class="col-sm-2 manual-input" style="display: none;">
+                                    <input type="number" step="any" name="subs_min[{{ $nilai }}]" class="form-control manual-req" placeholder="Minimal">
+                                </div>
+                                <div class="col-sm-2 manual-input" style="display: none;">
+                                    <input type="number" step="any" name="subs_max[{{ $nilai }}]" class="form-control manual-req" placeholder="Maksimal">
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nilai 4 (Baik)</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="subs[4]" class="form-control" placeholder="Deskripsi untuk skor 4" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label text-warning">Nilai 3 (Cukup)</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="subs[3]" class="form-control" placeholder="Deskripsi untuk skor 3" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nilai 2 (Kurang)</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="subs[2]" class="form-control" placeholder="Deskripsi untuk skor 2" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label text-danger">Nilai 1 (Buruk)</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="subs[1]" class="form-control" placeholder="Deskripsi untuk skor terendah" required>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -87,3 +105,41 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipeInput = document.getElementById('tipe_input');
+        const satuanContainer = document.getElementById('satuan_container');
+        const manualInputs = document.querySelectorAll('.manual-input');
+        const manualReqs = document.querySelectorAll('.manual-req');
+        const nameCols = document.querySelectorAll('.name-col');
+        const manualHelper = document.getElementById('manual_helper');
+
+        function toggleInputs() {
+            if (tipeInput.value === 'manual') {
+                satuanContainer.style.display = 'block';
+                manualHelper.style.display = 'block';
+                manualInputs.forEach(el => el.style.display = 'block');
+                manualReqs.forEach(el => el.setAttribute('required', 'required'));
+                nameCols.forEach(el => {
+                    el.classList.remove('col-sm-9');
+                    el.classList.add('col-sm-5');
+                });
+            } else {
+                satuanContainer.style.display = 'none';
+                manualHelper.style.display = 'none';
+                manualInputs.forEach(el => el.style.display = 'none');
+                manualReqs.forEach(el => el.removeAttribute('required'));
+                nameCols.forEach(el => {
+                    el.classList.remove('col-sm-5');
+                    el.classList.add('col-sm-9');
+                });
+            }
+        }
+
+        tipeInput.addEventListener('change', toggleInputs);
+        toggleInputs(); // Run on load
+    });
+</script>
+@endpush

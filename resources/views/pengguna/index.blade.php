@@ -43,10 +43,10 @@
                                         <i class="fas fa-edit mr-2"></i> Edit
                                     </a>
                                     @if($p->id_pengguna != auth()->id())
-                                    <form action="{{ route('pengguna.destroy', $p->id_pengguna) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('pengguna.destroy', $p->id_pengguna) }}" method="POST" class="d-inline form-delete">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus akun ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -62,3 +62,26 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $('.form-delete').on('submit', function(e) {
+        e.preventDefault();
+        let form = this;
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Akun ini akan dihapus permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+</script>
+@endpush

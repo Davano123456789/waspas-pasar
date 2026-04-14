@@ -17,23 +17,16 @@
                     </a>
                 </div>
 
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @endif
 
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="bg-light">
                             <tr>
-                                <th width="50">ID</th>
+                                <th width="50">No</th>
                                 <th>Nama Kriteria</th>
                                 <th>Bobot (W)</th>
-                                <th>Tipe</th>
+                                <th>Tipe Kriteria</th>
+                                <th>Tipe Input</th>
                                 <th>Sub-Kriteria (Likert)</th>
                                 <th width="150" class="text-center">Aksi</th>
                             </tr>
@@ -41,13 +34,21 @@
                         <tbody>
                             @foreach($kriterias as $k)
                             <tr>
-                                <td>C{{ $k->id_kriteria }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td class="font-weight-bold">{{ $k->nama_kriteria }}</td>
                                 <td>{{ $k->bobot }}</td>
                                 <td>
                                     <span class="badge {{ $k->tipe_kriteria == 1 ? 'badge-info' : 'badge-dark' }}">
                                         {{ $k->tipe_kriteria == 1 ? 'Benefit' : 'Cost' }}
                                     </span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ $k->tipe_input == 'manual' ? 'badge-primary' : 'badge-secondary' }}">
+                                        {{ ucfirst($k->tipe_input) }}
+                                    </span>
+                                    @if($k->satuan)
+                                        <small class="d-block text-muted mt-1">Satuan: {{ $k->satuan }}</small>
+                                    @endif
                                 </td>
                                 <td>
                                     <button class="btn btn-outline-secondary btn-xs" type="button" data-toggle="collapse" data-target="#sub{{ $k->id_kriteria }}">
@@ -59,6 +60,9 @@
                                                 @foreach($k->sub_kriteria as $sub)
                                                 <li>
                                                   <strong class="text-primary">{{ $sub->nilai_likert }}:</strong> {{ $sub->nama_sub_kriteria }}
+                                                  @if($k->tipe_input == 'manual')
+                                                    <em class="text-muted ml-1">({{ $sub->minimal_nilai }} - {{ $sub->maksimal_nilai }})</em>
+                                                  @endif
                                                 </li>
                                                 @endforeach
                                             </ul>
@@ -69,10 +73,10 @@
                                     <a href="{{ route('kriteria.edit', $k->id_kriteria) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('kriteria.destroy', $k->id_kriteria) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('kriteria.destroy', $k->id_kriteria) }}" method="POST" class="d-inline form-delete">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus kriteria ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -87,3 +91,26 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $('.form-delete').on('submit', function(e) {
+        e.preventDefault();
+        let form = this;
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Kriteria ini akan dihapus permanen beserta sub-kriterianya!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+</script>
+@endpush
