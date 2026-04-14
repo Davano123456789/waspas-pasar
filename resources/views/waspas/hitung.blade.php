@@ -14,7 +14,7 @@
     
     <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
         <h3 class="font-weight-bold">Tahapan Perhitungan WASPAS</h3>
-        <form action="{{ route('waspas.simpan') }}" method="POST">
+        <form id="formSimpan" action="{{ route('waspas.simpan') }}" method="POST">
             @csrf
             @foreach($results as $index => $res)
                 <input type="hidden" name="hasil[{{ $index }}][id_pasar]" value="{{ $res['id_pasar'] }}">
@@ -23,11 +23,21 @@
                 <input type="hidden" name="hasil[{{ $index }}][qi]" value="{{ $res['qi'] }}">
                 <input type="hidden" name="hasil[{{ $index }}][rank]" value="{{ $res['rank'] }}">
             @endforeach
-            <button type="submit" class="btn btn-success btn-lg shadow-sm">
+            <button type="submit" id="btnSimpan" class="btn btn-success btn-lg shadow-sm">
                 <i class="fas fa-save mr-2"></i> Simpan Hasil & Konfirmasi Ranking
             </button>
         </form>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('formSimpan').addEventListener('submit', function() {
+            var btn = document.getElementById('btnSimpan');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+        });
+    </script>
+    @endpush
 
     <!-- 1. Matriks Keputusan (X) -->
     <div class="col-md-12 grid-margin stretch-card">

@@ -51,10 +51,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('perhitungan/cetak/{batch_id}', [WaspasController::class, 'cetak'])->name('waspas.cetak');
     });
 
-    // Admin ONLY (Process & Save Calculations)
-    Route::middleware(['role:Admin'])->group(function() {
-        Route::get('perhitungan/proses', [WaspasController::class, 'hitung'])->name('waspas.hitung');
-        Route::post('perhitungan/simpan', [WaspasController::class, 'simpan'])->name('waspas.simpan');
-        Route::delete('perhitungan/{batch_id}', [WaspasController::class, 'destroy'])->name('waspas.destroy');
-    });
 });

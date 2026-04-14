@@ -118,7 +118,7 @@ class WaspasController extends Controller
                 HasilWaspas::create([
                     'batch_id' => $batch_id,
                     'id_pasar' => $row['id_pasar'],
-                    'id_pengguna' => 1,
+                    'id_pengguna' => auth()->id() ?? 1,
                     'skor_wsm' => $row['wsm'],
                     'skor_wpm' => $row['wpm'],
                     'skor_total_qi' => $row['qi'],
