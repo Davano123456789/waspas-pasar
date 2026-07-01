@@ -22,5 +22,7 @@ class Kriteria extends Model
         'nama_kriteria',
         'bobot',
         'tipe_kriteria',
+        'tipe_input',
+        'satuan',
     ];
 }

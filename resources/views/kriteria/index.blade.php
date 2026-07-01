@@ -34,11 +34,16 @@
                             @foreach($kriterias as $k)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td class="font-weight-bold">{{ $k->nama_kriteria }}</td>
+                                <td class="font-weight-bold">
+                                    {{ $k->nama_kriteria }}
+                                </td>
                                 <td>{{ $k->bobot }}</td>
                                 <td>
-                                    <span class="badge {{ $k->tipe_kriteria == 1 ? 'badge-info' : 'badge-dark' }}">
+                                    <span class="badge {{ $k->tipe_kriteria == 1 ? 'badge-info' : 'badge-dark' }} mr-1">
                                         {{ $k->tipe_kriteria == 1 ? 'Benefit' : 'Cost' }}
+                                    </span>
+                                    <span class="badge {{ $k->tipe_input === 'manual' ? 'badge-primary text-white' : 'badge-light border' }}">
+                                        {{ ucfirst($k->tipe_input) }}{{ $k->satuan ? ' ('.$k->satuan.')' : '' }}
                                     </span>
                                 </td>
                                 <td>
@@ -47,10 +52,13 @@
                                     </button>
                                     <div class="collapse mt-2" id="sub{{ $k->id_kriteria }}">
                                         <div class="p-2 bg-light rounded border">
-                                            <ul class="list-unstyled mb-0 small">
+                                            <ul class="list-unstyled mb-0 small text-left">
                                                 @foreach($k->sub_kriteria as $sub)
                                                 <li>
-                                                  <strong class="text-primary">{{ $sub->nilai_likert }}:</strong> {{ $sub->nama_sub_kriteria }}
+                                                    <strong class="text-primary">{{ $sub->nilai_likert }}:</strong> {{ $sub->nama_sub_kriteria }}
+                                                    @if($k->tipe_input === 'manual' && $sub->minimal_nilai !== null && $sub->maksimal_nilai !== null)
+                                                        <span class="text-muted">(Min: {{ $sub->minimal_nilai }}, Max: {{ $sub->maksimal_nilai }})</span>
+                                                    @endif
                                                 </li>
                                                 @endforeach
                                             </ul>

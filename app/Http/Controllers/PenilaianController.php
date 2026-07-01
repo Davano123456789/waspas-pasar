@@ -46,8 +46,9 @@ class PenilaianController extends Controller
         
         // Ambil nilai yang sudah ada jika ada
         $penilaians = Penilaian::where('id_pasar', $id_pasar)->pluck('nilai', 'id_kriteria')->toArray();
+        $penilaians_asli = Penilaian::where('id_pasar', $id_pasar)->pluck('nilai_asli', 'id_kriteria')->toArray();
         
-        return view('penilaian.input', compact('pasar', 'kriterias', 'penilaians'));
+        return view('penilaian.input', compact('pasar', 'kriterias', 'penilaians', 'penilaians_asli'));
     }
 
     public function store(Request $request)
@@ -61,22 +62,52 @@ class PenilaianController extends Controller
         }
 
         $nilai_pilihan = $request->nilai ?? []; // Array [id_kriteria => nilai_likert]
+        $nilai_asli_input = $request->nilai_asli ?? []; // Array [id_kriteria => nilai_angka_riil]
 
-        $kriterias = Kriteria::all();
+        $kriterias = Kriteria::with('sub_kriteria')->get();
 
         foreach ($kriterias as $k) {
             $id_kriteria = $k->id_kriteria;
-            $likertValue = $nilai_pilihan[$id_kriteria] ?? null;
 
-            if ($likertValue !== null) {
-                Penilaian::updateOrCreate(
-                    ['id_pasar' => $id_pasar, 'id_kriteria' => $id_kriteria],
-                    [
-                        'nilai' => $likertValue, 
-                        'nilai_asli' => null,
-                        'id_pengguna' => $user->id_pengguna
-                    ]
-                );
+            if ($k->tipe_input === 'manual') {
+                $rawVal = $nilai_asli_input[$id_kriteria] ?? null;
+                if ($rawVal !== null && $rawVal !== '') {
+                    // Pencocokan otomatis dengan batas range minimal & maksimal
+                    $matchedLikert = 1; // Default fallback terendah jika tidak cocok
+                    foreach ($k->sub_kriteria as $sub) {
+                        $min = $sub->minimal_nilai;
+                        $max = $sub->maksimal_nilai;
+
+                        if ($min !== null && $max !== null) {
+                            if ($rawVal >= $min && $rawVal <= $max) {
+                                $matchedLikert = $sub->nilai_likert;
+                                break;
+                            }
+                        }
+                    }
+
+                    Penilaian::updateOrCreate(
+                        ['id_pasar' => $id_pasar, 'id_kriteria' => $id_kriteria],
+                        [
+                            'nilai' => $matchedLikert,
+                            'nilai_asli' => $rawVal,
+                            'id_pengguna' => $user->id_pengguna
+                        ]
+                    );
+                }
+            } else {
+                $likertValue = $nilai_pilihan[$id_kriteria] ?? null;
+
+                if ($likertValue !== null && $likertValue !== '') {
+                    Penilaian::updateOrCreate(
+                        ['id_pasar' => $id_pasar, 'id_kriteria' => $id_kriteria],
+                        [
+                            'nilai' => $likertValue,
+                            'nilai_asli' => null,
+                            'id_pengguna' => $user->id_pengguna
+                        ]
+                    );
+                }
             }
         }
 

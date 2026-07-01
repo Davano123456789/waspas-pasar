@@ -92,7 +92,7 @@
                 <tr>
                     <td class="text-left font-weight-bold">{{ $p->nama_pasar }}</td>
                     @foreach($kriterias as $k)
-                    <td>{{ number_format($normalizedMatrix[$p->id_pasar][$k->id_kriteria], 4) }}</td>
+                    <td>{{ number_format($normalizedMatrix[$p->id_pasar][$k->id_kriteria], 3, ',', '.') }}</td>
                     @endforeach
                 </tr>
                 @endforeach

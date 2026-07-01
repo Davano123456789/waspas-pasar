@@ -21,6 +21,29 @@
                             <small class="text-muted font-weight-normal">C{{ $k->id_kriteria }} (Bobot: {{ $k->bobot }}, Tipe: {{ $k->tipe_kriteria == 1 ? 'Benefit' : 'Cost' }})</small>
                         </label>
                         <div class="col-sm-8">
+                            @if($k->tipe_input === 'manual')
+                                <div class="input-group">
+                                    <input type="number" step="any" name="nilai_asli[{{ $k->id_kriteria }}]" class="form-control" 
+                                        value="{{ old('nilai_asli.'.$k->id_kriteria, $penilaians_asli[$k->id_kriteria] ?? '') }}" 
+                                        placeholder="Masukkan nilai riil..." required>
+                                    @if($k->satuan)
+                                        <div class="input-group-append">
+                                            <span class="input-group-text font-weight-bold bg-light">{{ $k->satuan }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="mt-2 p-2 bg-light rounded border text-left">
+                                    <span class="text-primary font-weight-bold small"><i class="fas fa-info-circle mr-1"></i> Panduan Nilai:</span>
+                                    <ul class="mb-0 pl-3 small text-muted list-unstyled">
+                                        @foreach($k->sub_kriteria as $sub)
+                                            <li>
+                                                <strong class="text-primary">{{ $sub->nilai_likert }} ({{ $sub->nama_sub_kriteria }})</strong>: 
+                                                Batas Rentang {{ $sub->minimal_nilai }} s.d. {{ $sub->maksimal_nilai }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @else
                                 <select name="nilai[{{ $k->id_kriteria }}]" class="form-control" required>
                                     <option value="">-- Pilih Penilaian --</option>
                                     @foreach($k->sub_kriteria as $sub)
@@ -30,6 +53,7 @@
                                     </option>
                                     @endforeach
                                 </select>
+                            @endif
                         </div>
                     </div>
                     @endforeach
