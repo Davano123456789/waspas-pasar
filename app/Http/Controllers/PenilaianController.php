@@ -46,9 +46,8 @@ class PenilaianController extends Controller
         
         // Ambil nilai yang sudah ada jika ada
         $penilaians = Penilaian::where('id_pasar', $id_pasar)->pluck('nilai', 'id_kriteria')->toArray();
-        $penilaians_asli = Penilaian::where('id_pasar', $id_pasar)->pluck('nilai_asli', 'id_kriteria')->toArray();
         
-        return view('penilaian.input', compact('pasar', 'kriterias', 'penilaians', 'penilaians_asli'));
+        return view('penilaian.input', compact('pasar', 'kriterias', 'penilaians'));
     }
 
     public function store(Request $request)
@@ -62,37 +61,19 @@ class PenilaianController extends Controller
         }
 
         $nilai_pilihan = $request->nilai ?? []; // Array [id_kriteria => nilai_likert]
-        $nilai_manual = $request->nilai_asli ?? []; // Array [id_kriteria => nilai_asli]
 
         $kriterias = Kriteria::all();
 
         foreach ($kriterias as $k) {
             $id_kriteria = $k->id_kriteria;
-            $likertValue = null;
-            $asliValue = null;
-
-            if ($k->tipe_input == 'manual') {
-                $asliValue = $nilai_manual[$id_kriteria] ?? 0;
-                // Ubah koma menjadi titik agar desimalnya terbaca oleh PHP & Database
-                $asliValue = str_replace(',', '.', $asliValue);
-                
-                // Mapping otomatis berdasarkan range
-                $sub = \App\Models\SubKriteria::where('id_kriteria', $id_kriteria)
-                    ->where('minimal_nilai', '<=', $asliValue)
-                    ->where('maksimal_nilai', '>=', $asliValue)
-                    ->first();
-                
-                $likertValue = $sub ? $sub->nilai_likert : 1; // Default ke 1 jika tidak ketemu range
-            } else {
-                $likertValue = $nilai_pilihan[$id_kriteria] ?? null;
-            }
+            $likertValue = $nilai_pilihan[$id_kriteria] ?? null;
 
             if ($likertValue !== null) {
                 Penilaian::updateOrCreate(
                     ['id_pasar' => $id_pasar, 'id_kriteria' => $id_kriteria],
                     [
                         'nilai' => $likertValue, 
-                        'nilai_asli' => $asliValue,
+                        'nilai_asli' => null,
                         'id_pengguna' => $user->id_pengguna
                     ]
                 );

@@ -26,7 +26,6 @@
                                 <th>Nama Kriteria</th>
                                 <th>Bobot (W)</th>
                                 <th>Tipe Kriteria</th>
-                                <th>Tipe Input</th>
                                 <th>Sub-Kriteria (Likert)</th>
                                 <th width="150" class="text-center">Aksi</th>
                             </tr>
@@ -43,14 +42,6 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $k->tipe_input == 'manual' ? 'badge-primary' : 'badge-secondary' }}">
-                                        {{ ucfirst($k->tipe_input) }}
-                                    </span>
-                                    @if($k->satuan)
-                                        <small class="d-block text-muted mt-1">Satuan: {{ $k->satuan }}</small>
-                                    @endif
-                                </td>
-                                <td>
                                     <button class="btn btn-outline-secondary btn-xs" type="button" data-toggle="collapse" data-target="#sub{{ $k->id_kriteria }}">
                                         <i class="fas fa-eye mr-1"></i> Lihat Sub
                                     </button>
@@ -60,9 +51,6 @@
                                                 @foreach($k->sub_kriteria as $sub)
                                                 <li>
                                                   <strong class="text-primary">{{ $sub->nilai_likert }}:</strong> {{ $sub->nama_sub_kriteria }}
-                                                  @if($k->tipe_input == 'manual')
-                                                    <em class="text-muted ml-1">({{ $sub->minimal_nilai }} - {{ $sub->maksimal_nilai }})</em>
-                                                  @endif
                                                 </li>
                                                 @endforeach
                                             </ul>

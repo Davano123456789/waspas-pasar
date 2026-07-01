@@ -37,14 +37,6 @@
                 <div class="mt-3">
                   <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">MASUK</button>
                 </div>
-                <div class="my-2 d-flex justify-content-between align-items-center">
-                  <div class="form-check">
-                    <label class="form-check-label text-muted">
-                      <input type="checkbox" class="form-check-input">
-                      Ingat saya
-                    </label>
-                  </div>
-                </div>
               </form>
             </div>
             <p class="text-center mt-4 text-muted small">© 2026 WASPAS-Pasar Surya. Sistem Pendukung Keputusan.</p>

@@ -17,7 +17,6 @@ class Penilaian extends Model
         'id_pasar',
         'id_kriteria',
         'nilai',
-        'nilai_asli',
     ];
 
     public function pasar()

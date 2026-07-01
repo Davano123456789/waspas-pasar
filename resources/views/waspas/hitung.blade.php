@@ -110,11 +110,9 @@
                     <table class="table table-bordered text-center">
                         <thead class="bg-light font-weight-bold">
                             <tr>
-                                <th>Rank</th>
+                                <th width="100">Rangking</th>
                                 <th>Nama Pasar</th>
-                                <th>WSM (Q1)</th>
-                                <th>WPM (Q2)</th>
-                                <th class="bg-primary text-white">Skor Akhir (Qi)</th>
+                                <th class="bg-primary text-white font-weight-bold">Nilai Preferensi Qi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,9 +120,7 @@
                             <tr class="{{ $res['rank'] == 1 ? 'bg-success text-white' : '' }}">
                                 <td><strong>{{ $res['rank'] }}</strong></td>
                                 <td class="text-left font-weight-bold">{{ $res['nama_pasar'] }}</td>
-                                <td>{{ number_format($res['wsm'], 4) }}</td>
-                                <td>{{ number_format($res['wpm'], 4) }}</td>
-                                <td class="font-weight-bold">{{ number_format($res['qi'], 4) }}</td>
+                                <td class="font-weight-bold">{{ number_format($res['qi'], 3, ',', '.') }}</td>
                             </tr>
                             @endforeach
                         </tbody>

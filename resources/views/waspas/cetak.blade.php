@@ -104,11 +104,9 @@
         <table>
             <thead>
                 <tr>
-                    <th width="50">Rank</th>
+                    <th width="80">Rangking</th>
                     <th class="text-left">Nama Pasar</th>
-                    <th>Skor WSM (Q1)</th>
-                    <th>Skor WPM (Q2)</th>
-                    <th>Skor Akhir (Qi)</th>
+                    <th>Nilai Preferensi Qi</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,9 +114,7 @@
                 <tr style="{{ $h->rangking == 1 ? 'background-color: #f9f9f9;' : '' }}">
                     <td><strong>{{ $h->rangking }}</strong></td>
                     <td class="text-left font-weight-bold">{{ $h->pasar->nama_pasar }}</td>
-                    <td>{{ number_format($h->skor_wsm, 4) }}</td>
-                    <td>{{ number_format($h->skor_wpm, 4) }}</td>
-                    <td class="font-weight-bold">{{ number_format($h->skor_total_qi, 4) }}</td>
+                    <td class="font-weight-bold">{{ number_format($h->skor_total_qi, 3, ',', '.') }}</td>
                 </tr>
                 @endforeach
             </tbody>

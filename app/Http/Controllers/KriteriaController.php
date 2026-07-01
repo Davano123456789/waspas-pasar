@@ -26,38 +26,28 @@ class KriteriaController extends Controller
             'nama_kriteria' => 'required|string|max:255',
             'bobot' => 'required|numeric',
             'tipe_kriteria' => 'required|numeric',
-            'tipe_input' => 'required|string|in:pilihan,manual',
-            'satuan' => 'nullable|string|max:50',
-            'subs' => 'required|array|size:5', // Harus ada 5 sub kriteria (1-5)
+            'subs' => 'required|array',
+            'subs.1' => 'required|string|max:255',
+            'subs.2' => 'required|string|max:255',
+            'subs.3' => 'required|string|max:255',
         ]);
-
-        if ($request->tipe_input == 'manual') {
-            $request->validate([
-                'subs_min' => 'required|array|size:5',
-                'subs_min.*' => 'required|numeric',
-                'subs_max' => 'required|array|size:5',
-                'subs_max.*' => 'required|numeric',
-            ]);
-        }
 
         DB::transaction(function() use ($request) {
             $kriteria = Kriteria::create([
                 'nama_kriteria' => $request->nama_kriteria,
                 'bobot' => $request->bobot,
                 'tipe_kriteria' => $request->tipe_kriteria,
-                'tipe_input' => $request->tipe_input,
-                'satuan' => $request->satuan,
             ]);
 
-            // Simpan Sub Kriteria (Nilai 5 sampai 1)
+            // Simpan Sub Kriteria (Hanya jika diisi)
             foreach ($request->subs as $nilai => $nama_sub) {
-                SubKriteria::create([
-                    'id_kriteria' => $kriteria->id_kriteria,
-                    'nama_sub_kriteria' => $nama_sub,
-                    'nilai_likert' => $nilai,
-                    'minimal_nilai' => $request->tipe_input == 'manual' ? $request->subs_min[$nilai] : null,
-                    'maksimal_nilai' => $request->tipe_input == 'manual' ? $request->subs_max[$nilai] : null,
-                ]);
+                if (!empty($nama_sub)) {
+                    SubKriteria::create([
+                        'id_kriteria' => $kriteria->id_kriteria,
+                        'nama_sub_kriteria' => $nama_sub,
+                        'nilai_likert' => $nilai,
+                    ]);
+                }
             }
         });
 
@@ -78,19 +68,11 @@ class KriteriaController extends Controller
             'nama_kriteria' => 'required|string|max:255',
             'bobot' => 'required|numeric',
             'tipe_kriteria' => 'required|numeric',
-            'tipe_input' => 'required|string|in:pilihan,manual',
-            'satuan' => 'nullable|string|max:50',
-            'subs' => 'required|array|size:5',
+            'subs' => 'required|array',
+            'subs.1' => 'required|string|max:255',
+            'subs.2' => 'required|string|max:255',
+            'subs.3' => 'required|string|max:255',
         ]);
-
-        if ($request->tipe_input == 'manual') {
-            $request->validate([
-                'subs_min' => 'required|array|size:5',
-                'subs_min.*' => 'required|numeric',
-                'subs_max' => 'required|array|size:5',
-                'subs_max.*' => 'required|numeric',
-            ]);
-        }
 
         DB::transaction(function() use ($request, $id) {
             $kriteria = Kriteria::findOrFail($id);
@@ -98,20 +80,20 @@ class KriteriaController extends Controller
                 'nama_kriteria' => $request->nama_kriteria,
                 'bobot' => $request->bobot,
                 'tipe_kriteria' => $request->tipe_kriteria,
-                'tipe_input' => $request->tipe_input,
-                'satuan' => $request->satuan,
             ]);
 
-            // Update atau Create Sub Kriteria
+            // Update, Create, atau Delete Sub Kriteria
             foreach ($request->subs as $nilai => $nama_sub) {
-                SubKriteria::updateOrCreate(
-                    ['id_kriteria' => $kriteria->id_kriteria, 'nilai_likert' => $nilai],
-                    [
-                        'nama_sub_kriteria' => $nama_sub,
-                        'minimal_nilai' => $request->tipe_input == 'manual' ? $request->subs_min[$nilai] : null,
-                        'maksimal_nilai' => $request->tipe_input == 'manual' ? $request->subs_max[$nilai] : null,
-                    ]
-                );
+                if (!empty($nama_sub)) {
+                    SubKriteria::updateOrCreate(
+                        ['id_kriteria' => $kriteria->id_kriteria, 'nilai_likert' => $nilai],
+                        ['nama_sub_kriteria' => $nama_sub]
+                    );
+                } else {
+                    SubKriteria::where('id_kriteria', $kriteria->id_kriteria)
+                        ->where('nilai_likert', $nilai)
+                        ->delete();
+                }
             }
         });
 

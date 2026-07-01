@@ -10,7 +10,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h4 class="card-title">Detail Hasil Perhitungan</h4>
-                        <p class="card-description text-muted">ID Batch: <strong>{{ $batch_id }}</strong> | Tanggal: {{ $hasil->first()->created_at->format('d M Y, H:i') }}</p>
+                        <p class="card-description text-muted">ID Batch: <strong>{{ $batch_id }}</strong> | Tanggal: {{ $hasil->first()->created_at->format('d M Y') }}</p>
                     </div>
                     <div>
                         <a href="{{ route('waspas.index') }}" class="btn btn-light mr-2">
@@ -80,14 +80,12 @@
                 <div class="mt-5">
                     <h5 class="text-primary font-weight-bold mb-3"><i class="fas fa-award mr-2"></i> Tahap Akhir: Ranking Hasil WASPAS</h5>
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped">
-                            <thead class="bg-primary text-white text-center">
+                        <table class="table table-hover table-striped text-center">
+                            <thead class="bg-primary text-white">
                                 <tr>
-                                    <th width="80">Ranking</th>
-                                    <th class="text-left">Nama Pasar (Alternatif)</th>
-                                    <th>Skor WSM</th>
-                                    <th>Skor WPM</th>
-                                    <th>Skor Akhir (Qi)</th>
+                                    <th width="100">Rangking</th>
+                                    <th class="text-left">Nama Pasar</th>
+                                    <th>Nilai Preferensi Qi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,13 +98,9 @@
                                             <span class="badge badge-light border">{{ $row->rangking }}</span>
                                         @endif
                                     </td>
-                                    <td class="font-weight-bold">{{ $row->pasar->nama_pasar }}</td>
-                                    <td class="text-center">{{ number_format($row->skor_wsm, 4) }}</td>
-                                    <td class="text-center">{{ number_format($row->skor_wpm, 4) }}</td>
-                                    <td class="text-center">
-                                        <div class="badge badge-primary font-weight-bold" style="font-size: 1rem;">
-                                            {{ number_format($row->skor_total_qi, 4) }}
-                                        </div>
+                                    <td class="text-left font-weight-bold">{{ $row->pasar->nama_pasar }}</td>
+                                    <td class="text-center font-weight-bold" style="font-size: 1.1rem;">
+                                        {{ number_format($row->skor_total_qi, 3, ',', '.') }}
                                     </td>
                                 </tr>
                                 @endforeach

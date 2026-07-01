@@ -21,16 +21,6 @@
                             <small class="text-muted font-weight-normal">C{{ $k->id_kriteria }} (Bobot: {{ $k->bobot }}, Tipe: {{ $k->tipe_kriteria == 1 ? 'Benefit' : 'Cost' }})</small>
                         </label>
                         <div class="col-sm-8">
-                            @if($k->tipe_input == 'manual')
-                                <div class="input-group">
-                                    <input type="number" step="0.01" name="nilai_asli[{{ $k->id_kriteria }}]" class="form-control" 
-                                        placeholder="Masukkan angka..." 
-                                        value="{{ isset($penilaians_asli[$k->id_kriteria]) ? $penilaians_asli[$k->id_kriteria] : '' }}" required>
-                                    @if($k->satuan)
-                                        <div class="input-group-append"><span class="input-group-text">{{ $k->satuan }}</span></div>
-                                    @endif
-                                </div>
-                            @else
                                 <select name="nilai[{{ $k->id_kriteria }}]" class="form-control" required>
                                     <option value="">-- Pilih Penilaian --</option>
                                     @foreach($k->sub_kriteria as $sub)
@@ -40,7 +30,6 @@
                                     </option>
                                     @endforeach
                                 </select>
-                            @endif
                         </div>
                     </div>
                     @endforeach

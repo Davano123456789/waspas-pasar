@@ -18,7 +18,7 @@
                     <table class="table table-hover">
                         <thead class="bg-light">
                             <tr>
-                                <th>#</th>
+                                <th>No</th>
                                 <th>Username</th>
                                 <th>Nama Lengkap</th>
                                 <th>Peran</th>

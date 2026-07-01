@@ -31,7 +31,7 @@
                     <table class="table table-hover">
                         <thead class="bg-light">
                             <tr>
-                                <th>#</th>
+                                <th>No</th>
                                 <th>Tanggal & Waktu</th>
                                 <th>Kode Batch</th>
                                 <th>Aksi</th>
@@ -43,7 +43,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <i class="fas fa-calendar-alt mr-2 text-primary"></i>
-                                    {{ \Carbon\Carbon::parse($h->created_at)->translatedFormat('d F Y (H:i)') }}
+                                    {{ \Carbon\Carbon::parse($h->created_at)->translatedFormat('d F Y') }}
                                 </td>
                                 <td><code class="text-muted">{{ $h->batch_id }}</code></td>
                                 <td>
