@@ -18,10 +18,11 @@
         <div class="row w-100 mx-0">
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5 shadow-lg rounded">
-              <div class="brand-logo text-center">
-                <h3 class="font-weight-bold text-primary"><i class="fas fa-shopping-basket mr-2"></i>WASPAS-PASAR</h3>
+              <div class="brand-logo text-center mb-3">
+                <img src="{{ asset('logo-pasar.png') }}" alt="Logo" style="max-height: 100px; width: auto;" class="img-fluid">
+                <h3 class="font-weight-bold text-primary mt-2">WASPAS-PASAR</h3>
               </div>
-              <h4 class="font-weight-light">Silakan login untuk melanjutkan.</h4>
+              <h4 class="font-weight-light text-center">Silakan login untuk melanjutkan.</h4>
               
               <form class="pt-3" action="{{ route('login.post') }}" method="POST">
                 @csrf
