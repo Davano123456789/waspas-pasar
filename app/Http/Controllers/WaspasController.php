@@ -28,19 +28,36 @@ class WaspasController extends Controller
     /**
      * Melakukan proses perhitungan detail (Step-by-step)
      */
-    public function hitung()
+    public function hitung(Request $request)
     {
         $kriterias = Kriteria::all();
         $pasars = Pasar::all();
         
-        $evaluatedPasars = $pasars->filter(function($pasar) use ($kriterias) {
+        $evaluatedPasarsAll = $pasars->filter(function($pasar) use ($kriterias) {
             return Penilaian::where('id_pasar', $pasar->id_pasar)->count() >= $kriterias->count() && $kriterias->count() > 0;
         });
 
-        if ($evaluatedPasars->isEmpty()) {
+        if ($evaluatedPasarsAll->isEmpty()) {
             return view('waspas.hitung', [
                 'error' => 'Belum ada data penilaian yang lengkap untuk dilakukan perhitungan.'
             ]);
+        }
+
+        // Tampilkan halaman pemilihan pasar jika parameter pasar_ids belum dikirim
+        $selectedIds = $request->input('pasar_ids');
+        if (empty($selectedIds)) {
+            return view('waspas.pilih_pasar', [
+                'pasars' => $evaluatedPasarsAll
+            ]);
+        }
+
+        // Filter evaluatedPasars hanya untuk pasar yang dicentang
+        $evaluatedPasars = $evaluatedPasarsAll->filter(function($p) use ($selectedIds) {
+            return in_array($p->id_pasar, $selectedIds);
+        });
+
+        if ($evaluatedPasars->isEmpty()) {
+            return back()->withErrors('Pilih minimal satu pasar untuk dihitung!');
         }
 
         $matrix = [];

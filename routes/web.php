@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
         Route::get('penilaian/{id}/input', [PenilaianController::class, 'input'])->name('penilaian.input');
         Route::post('penilaian', [PenilaianController::class, 'store'])->name('penilaian.store');
+        Route::delete('penilaian/{id}', [PenilaianController::class, 'destroy'])->name('penilaian.destroy');
     });
 
     // Admin, Direktur, & Kepala Pasar (View & Print Results)

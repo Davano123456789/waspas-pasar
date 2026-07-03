@@ -33,9 +33,18 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('penilaian.input', $pasar->id_pasar) }}" class="btn btn-primary btn-sm btn-icon-text">
-                                        <i class="fas fa-edit mr-2"></i>
+                                        <i class="fas fa-edit mr-1"></i>
                                         {{ $pasar->is_evaluated ? 'Edit Nilai' : 'Input Nilai' }}
                                     </a>
+                                    @if($pasar->is_evaluated)
+                                        <form action="{{ route('penilaian.destroy', $pasar->id_pasar) }}" method="POST" class="d-inline form-reset-penilaian">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm btn-icon-text">
+                                                <i class="fas fa-trash-alt mr-1"></i> Hapus Nilai
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -51,3 +60,26 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $('.form-reset-penilaian').on('submit', function(e) {
+        e.preventDefault();
+        let form = this;
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Penilaian untuk pasar ini akan dihapus dan dikosongkan kembali!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+</script>
+@endpush

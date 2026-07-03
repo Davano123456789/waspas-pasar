@@ -14,19 +14,24 @@
     
     <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
         <h3 class="font-weight-bold">Tahapan Perhitungan WASPAS</h3>
-        <form id="formSimpan" action="{{ route('waspas.simpan') }}" method="POST">
-            @csrf
-            @foreach($results as $index => $res)
-                <input type="hidden" name="hasil[{{ $index }}][id_pasar]" value="{{ $res['id_pasar'] }}">
-                <input type="hidden" name="hasil[{{ $index }}][wsm]" value="{{ $res['wsm'] }}">
-                <input type="hidden" name="hasil[{{ $index }}][wpm]" value="{{ $res['wpm'] }}">
-                <input type="hidden" name="hasil[{{ $index }}][qi]" value="{{ $res['qi'] }}">
-                <input type="hidden" name="hasil[{{ $index }}][rank]" value="{{ $res['rank'] }}">
-            @endforeach
-            <button type="submit" id="btnSimpan" class="btn btn-success btn-lg shadow-sm">
-                <i class="fas fa-save mr-2"></i> Simpan Hasil & Konfirmasi Ranking
-            </button>
-        </form>
+        <div class="d-flex align-items-center">
+            <a href="{{ route('waspas.hitung') }}" class="btn btn-light mr-2 shadow-sm">
+                <i class="fas fa-arrow-left mr-2"></i> Ganti Pilihan Pasar
+            </a>
+            <form id="formSimpan" action="{{ route('waspas.simpan') }}" method="POST" class="m-0">
+                @csrf
+                @foreach($results as $index => $res)
+                    <input type="hidden" name="hasil[{{ $index }}][id_pasar]" value="{{ $res['id_pasar'] }}">
+                    <input type="hidden" name="hasil[{{ $index }}][wsm]" value="{{ $res['wsm'] }}">
+                    <input type="hidden" name="hasil[{{ $index }}][wpm]" value="{{ $res['wpm'] }}">
+                    <input type="hidden" name="hasil[{{ $index }}][qi]" value="{{ $res['qi'] }}">
+                    <input type="hidden" name="hasil[{{ $index }}][rank]" value="{{ $res['rank'] }}">
+                @endforeach
+                <button type="submit" id="btnSimpan" class="btn btn-success shadow-sm">
+                    <i class="fas fa-save mr-2"></i> Simpan Hasil & Konfirmasi Ranking
+                </button>
+            </form>
+        </div>
     </div>
 
     @push('scripts')

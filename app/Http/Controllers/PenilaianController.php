@@ -113,4 +113,19 @@ class PenilaianController extends Controller
 
         return redirect()->route('penilaian.index')->with('success', 'Penilaian berhasil disimpan!');
     }
+
+    public function destroy($id_pasar)
+    {
+        $user = Auth::user();
+
+        // Proteksi Tambahan: Jangan biarkan Kepala Pasar hapus data pasar lain
+        if ($user->peran === 'Kepala Pasar' && $user->id_pasar != $id_pasar) {
+            abort(403, 'Anda dilarang menghapus penilaian untuk pasar lain.');
+        }
+
+        // Hapus semua penilaian untuk pasar ini
+        Penilaian::where('id_pasar', $id_pasar)->delete();
+
+        return redirect()->route('penilaian.index')->with('success', 'Penilaian pasar berhasil dikosongkan!');
+    }
 }
