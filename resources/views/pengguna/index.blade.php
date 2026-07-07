@@ -7,11 +7,26 @@
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title">Daftar Pengguna / Akun</h4>
-                    <a href="{{ route('pengguna.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-user-plus mr-2"></i> Tambah Akun Manual
-                    </a>
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                    <h4 class="card-title mb-md-0">Daftar Pengguna / Akun</h4>
+                    <div class="d-flex align-items-center flex-wrap">
+                        <form action="#" method="GET" class="mr-2 my-1" id="search-form">
+                            <div class="input-group">
+                                <input type="text" id="search-input" class="form-control" placeholder="Cari akun..." style="height: 38px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" style="padding: 0 15px; height: 38px; pointer-events: none;">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <a href="#" id="btn-reset-search" class="btn btn-light border" title="Reset Pencarian" style="padding: 0 15px; height: 38px; display: none; align-items: center; justify-content: center;">
+                                        <i class="fas fa-times text-danger"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <a href="{{ route('pengguna.create') }}" class="btn btn-primary btn-sm my-1" style="height: 38px; display: inline-flex; align-items: center;">
+                            <i class="fas fa-user-plus mr-2"></i> Tambah Akun Manual
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="table-responsive">
@@ -27,8 +42,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($penggunas as $p)
-                            <tr>
+                            @forelse($penggunas as $p)
+                            <tr class="pengguna-row">
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="font-weight-bold">{{ $p->username }}</td>
                                 <td>{{ $p->nama_lengkap }}</td>
@@ -53,7 +68,18 @@
                                     @endif
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Data pengguna belum tersedia.
+                                </td>
+                            </tr>
+                            @endforelse
+                            <tr id="empty-search-row" style="display: none;">
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Data akun dengan kata kunci "<strong id="search-keyword"></strong>" tidak ditemukan.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -82,6 +108,48 @@
                 form.submit();
             }
         });
+    });
+
+    // Real-time Search using jQuery
+    $('#search-input').on('input', function() {
+        let value = $(this).val().toLowerCase().trim();
+        let visibleRowsCount = 0;
+
+        $('.pengguna-row').each(function() {
+            let rowText = $(this).text().toLowerCase();
+            if (rowText.indexOf(value) > -1) {
+                $(this).show();
+                visibleRowsCount++;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // Tampilkan pesan kosong jika tidak ada baris yang cocok
+        if (visibleRowsCount === 0 && value !== '') {
+            $('#empty-search-row').show();
+            $('#search-keyword').text(value);
+        } else {
+            $('#empty-search-row').hide();
+        }
+
+        // Tampilkan/sembunyikan tombol reset
+        if (value !== '') {
+            $('#btn-reset-search').css('display', 'inline-flex');
+        } else {
+            $('#btn-reset-search').css('display', 'none');
+        }
+    });
+
+    // Reset button handler
+    $('#btn-reset-search').on('click', function(e) {
+        e.preventDefault();
+        $('#search-input').val('').trigger('input');
+    });
+
+    // Prevent default form submit on enter
+    $('#search-form').on('submit', function(e) {
+        e.preventDefault();
     });
 </script>
 @endpush

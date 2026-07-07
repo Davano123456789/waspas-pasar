@@ -10,10 +10,19 @@ class PasarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pasars = Pasar::all();
-        return view('pasar.index', compact('pasars'));
+        $search = $request->input('search');
+
+        $pasars = Pasar::when($search, function ($query, $search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('nama_pasar', 'like', '%' . $search . '%')
+                  ->orWhere('alamat', 'like', '%' . $search . '%')
+                  ->orWhere('keterangan', 'like', '%' . $search . '%');
+            });
+        })->get();
+
+        return view('pasar.index', compact('pasars', 'search'));
     }
 
     /**

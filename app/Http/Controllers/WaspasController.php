@@ -115,8 +115,14 @@ class WaspasController extends Controller
             return $b['qi'] <=> $a['qi'];
         });
 
+        $rank = 1;
+        $prev_qi = null;
         foreach ($results as $index => &$res) {
-            $res['rank'] = $index + 1;
+            if ($prev_qi !== null && round($res['qi'], 6) != round($prev_qi, 6)) {
+                $rank++;
+            }
+            $res['rank'] = $rank;
+            $prev_qi = $res['qi'];
         }
 
         return view('waspas.hitung', compact('kriterias', 'evaluatedPasars', 'matrix', 'normalizedMatrix', 'results'));
