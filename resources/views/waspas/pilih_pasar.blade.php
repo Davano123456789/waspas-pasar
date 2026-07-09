@@ -72,7 +72,7 @@
                                              </label>
                                          </div>
                                      </td>
-                                     <td class="text-left font-weight-bold">{{ $p->nama_pasar }}</td>
+                                     <td class="text-left font-weight-bold pasar-name-cell">{{ $p->nama_pasar }}</td>
                                      <td class="text-left">{{ $p->alamat }}</td>
                                  </tr>
                                  @endforeach
@@ -123,7 +123,7 @@
             let visibleRowsCount = 0;
 
             $('.pasar-row').each(function() {
-                let rowText = $(this).text().toLowerCase();
+                let rowText = $(this).find('.pasar-name-cell').text().toLowerCase();
                 if (rowText.indexOf(value) > -1) {
                     $(this).show();
                     visibleRowsCount++;
